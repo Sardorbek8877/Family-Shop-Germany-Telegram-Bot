@@ -1,10 +1,8 @@
 import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
-import org.telegram.telegrambots.meta.api.objects.Document;
-import org.telegram.telegrambots.meta.api.objects.File;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.InputStream;
@@ -28,12 +26,52 @@ public class MyBot extends TelegramLongPollingBot {
 
         if (update.hasMessage()){
             Message message = update.getMessage();
-            Document document = message.getDocument();
-            try {
-                saveFileToFolder(document.getFileId(), document.getFileName());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            String chatId = message.getChatId().toString();
+//            Document document = message.getDocument();
+//            try {
+//                saveFileToFolder(document.getFileId(), document.getFileName());
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }file //
+//            Voice voice = message.getVoice();
+//            try {
+//                saveFileToFolder(voice.getFileId(), "voice.mp3");
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+            if (message.hasText()){
+                String text = message.getText();
+                if (text.equals("/start")){
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setText("Assalomu Aleykum.\n" +
+                            "Family Shop Germany do'konimizning rasmiy botiga Xush kelibsiz!\n" +
+                            "Itimos tilni tanlang:\n" +
+                            "Pojalyusta viberite yazik:\n" +
+                            "1 - uz\n" +
+                            "2 - ru");
+                    sendMessage.setChatId(chatId);
+                    try {
+                        execute(sendMessage);
+                    } catch (TelegramApiException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                } else if (text.equals("1")) {
+
+                }else if (text.equals("2")) {
+
+                }
+
             }
+            else if(message.hasAudio()){
+                System.out.println("Audio");
+            }
+            else if (message.hasDocument()){
+                System.out.println("File");
+            }
+        }
+        else if (update.hasCallbackQuery()){
+
         }
     }
 
